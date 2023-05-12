@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 
 import 'Daterange.dart';
 import 'Notifications.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 
 
 
@@ -16,42 +15,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _Dashboard extends State<Dashboard> {
-  Widget _buildSalesChart() {
-    List<SalesData> data = [
-      SalesData('Jan', 100),
-      SalesData('Feb', 200),
-      SalesData('Mar', 150),
-      // Add more data points as needed
-    ];
 
-    return charts.LineChart(
-      _createSeriesData(data).cast<charts.Series<dynamic, num>>(),
-      animate: true,
-      defaultRenderer: charts.LineRendererConfig(includeArea: true, stacked: true),
-      primaryMeasureAxis: charts.NumericAxisSpec(renderSpec: charts.NoneRenderSpec()),
-      domainAxis: charts.OrdinalAxisSpec(
-        renderSpec: charts.SmallTickRendererSpec(
-          labelStyle: charts.TextStyleSpec(
-              fontSize: 16,
-              color: charts.Color.white
-          ),
-        ),
-      ),
-    );
-  }
-
-  List<charts.Series<SalesData, String>> _createSeriesData(List<SalesData> data) {
-    return [
-      charts.Series<SalesData, String>(
-        id: 'sales',
-        colorFn: (_, __) => charts.Color.white,
-        areaColorFn: (_, __) => charts.Color(r: 0, g: 255, b: 0),
-        domainFn: (SalesData sales, _) => sales.month,
-        measureFn: (SalesData sales, _) => sales.sales,
-        data: data,
-      ),
-    ];
-  }
   NotificationsManager _notificationsManager = NotificationsManager();
   List<Notifications> _notifications = [];
   bool isExpanded = false;
@@ -461,47 +425,7 @@ class _Dashboard extends State<Dashboard> {
                             decoration: BoxDecoration(
                               color: Colors.purple, // Purple background
                             ),
-                            child: charts.LineChart(
-                              [
-                                charts.Series<SalesData, String>(
-                                  id: 'Sales',
-                                  domainFn: (SalesData sales, _) => sales.month,
-                                  measureFn: (SalesData sales, _) => sales.sales,
-                                  colorFn: (_, __) => charts.Color(r: 255, g: 255, b: 255),
-                                  data: data,
-                                )
-                              ],
-                              animate: true,
-                              primaryMeasureAxis: charts.NumericAxisSpec(
-                                renderSpec: charts.GridlineRendererSpec(
-                                  labelStyle: charts.TextStyleSpec(
-                                    color: charts.MaterialPalette.white, // White labels on OY axis
-                                  ),
-                                  lineStyle: charts.LineStyleSpec(
-                                    color: charts.Color(r: 255, g: 255, b: 255, a: 128),
-                                  ),
-                                ),
-                                tickProviderSpec: charts.BasicNumericTickProviderSpec(
-                                  desiredTickCount: 6, // Number of ticks on OY axis
-                                ),
-                                tickFormatterSpec: charts.BasicNumericTickFormatterSpec(
-                                      (num? value) => '\$${value!.toInt()}',
-                                ),
-                                viewport: charts.NumericExtents(0, 450), // Adjust the maximum value of OY axis if needed
-                              ),
-                              domainAxis: charts.OrdinalAxisSpec(
-                                renderSpec: charts.SmallTickRendererSpec(
-                                  labelStyle: charts.TextStyleSpec(
-                                    color: charts.MaterialPalette.white, // White labels on OX axis
-                                  ),
-                                  lineStyle: charts.LineStyleSpec(
-                                  ),
-                                ),
-                              ),
-                              defaultRenderer: charts.LineRendererConfig(
-                                includeArea: true, // Enable shading below the line
-                              ),
-                            ),
+
                           ),
                         ),
 
@@ -518,9 +442,3 @@ class _Dashboard extends State<Dashboard> {
     );
   }
   }
-class SalesData {
-  final String month;
-  final int sales;
-
-  SalesData(this.month, this.sales);
-}
