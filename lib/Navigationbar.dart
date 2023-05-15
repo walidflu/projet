@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import 'BankAccount.dart';
 import 'Dashboard.dart';
@@ -25,7 +24,7 @@ class _NavigationBARState extends State<NavigationBAR> {
     {'screen': Sales(), 'title': 'Sales', 'icon': Icons.attach_money},
     {'screen': Purchases(), 'title': 'Purchases', 'icon': Icons.shopping_cart},
     {
-      'screen': BankAccount(),
+      'screen': BankAccountForm(),
       'title': 'Bank Account',
       'icon': Icons.account_balance
     },
@@ -109,3 +108,5 @@ class _NavigationBARState extends State<NavigationBAR> {
     );
   }
 }
+
+

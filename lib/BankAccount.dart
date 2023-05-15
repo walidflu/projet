@@ -1,357 +1,609 @@
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'dart:io';
 
-
-class BankAccount extends StatefulWidget {
-  const BankAccount({Key? key}) : super(key: key);
-
+class BankAccountForm extends StatefulWidget {
   @override
-  _BankAccountState createState() => _BankAccountState();
+  _BankAccountFormState createState() => _BankAccountFormState();
 }
 
-class _BankAccountState extends State<BankAccount> {
-  final List<charts.Series<Statistic, String>> _chartData = [
-    charts.Series<Statistic, String>(
-      id: 'Statistics',
-      domainFn: (statistic, _) => statistic.dayOfWeek,
-      measureFn: (statistic, _) => statistic.netWorth,
-      data: [
-        Statistic('Mon', 60000),
-        Statistic('Tue', 75000),
-        Statistic('Wed', 80000),
-        Statistic('Thu', 95000),
-        Statistic('Fri', 110000),
-        Statistic('Sat', 120000),
-        Statistic('Sun', 90000),
-      ],
-    ),
-  ];
+class _BankAccountFormState extends State<BankAccountForm> {
+  TextEditingController _numberOfAccountsController = TextEditingController();
+  int _numberOfAccounts = 0;
+  bool _isTextFieldFocused = false;
+  FocusNode _focusNode = FocusNode();
 
-  final List<String> _months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+  @override
+  void dispose() {
+    _numberOfAccountsController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
 
-  final List<int> _years = List.generate(DateTime.now().year - 2021 + 1, (index) => 2021 + index);
-
-  String _selectedMonth = 'January';
-  int _selectedYear = DateTime.now().year;
-  String _selectedWeek = 'Week 1';
-
-  String? _accountNumber;
-  String? _initialBalance;
-  bool _showForm = true;
-
-  void _submitForm() {
-    // Validate input
-    if (_accountNumber != null && _initialBalance != null) {
-      if (_isNumeric(_accountNumber!) && _isNumeric(_initialBalance!)) {
-        setState(() {
-          _showForm = false;
-        });
-        return;
-      }
+  void _navigateToAccountForms() {
+    if (_numberOfAccounts <= 0) {
+      _showValidationMessage('Please enter a number greater than 0.');
+      return;
     }
 
-    // Display error message if input is invalid
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Please enter valid account number and initial balance.'),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AccountCreationPage(
+          numberOfAccounts: _numberOfAccounts,
+        ),
       ),
     );
   }
 
-  bool _isNumeric(String value) {
-    if (value.isEmpty) return false;
-    final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
-    return numericRegex.hasMatch(value);
+  void _showValidationMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _showForm
-          ? Container(
+      body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/back8.jpg'),
+            image: AssetImage("assets/back8.jpg"),
             fit: BoxFit.cover,
           ),
         ),
         child: Center(
-          child: Card(
-            elevation: 8.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                // Set the border radius
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white, // Set the shadow color
-                    offset: Offset(0, 2), // Set the offset of the shadow
-                    blurRadius: 4, // Set the blur radius of the shadow
-                    spreadRadius: 0, // Set the spread radius of the shadow
-                  ),
-                ],
-              ),
-              width: 400, // Set the desired width
-              height: 270, // Set the desired height
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Create Bank Account',
-                      style: TextStyle(
-                        color: Colors.purpleAccent,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 16.0),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Account Number',
-                        labelStyle: TextStyle(color: Colors.deepPurple),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        hintStyle: TextStyle(color: Colors.black),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _accountNumber = value;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 16.0),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'initial balance',
-                        labelStyle: TextStyle(color: Colors.deepPurple),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        hintStyle: TextStyle(color: Colors.black),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _initialBalance = value;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 40.0),
-                    ElevatedButton(
-                      onPressed: _submitForm,
-                      child: Text('Create Account'),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors
-                            .deepPurpleAccent), // Set the desired background color
-                      ),
-                    ),
-                  ],
+          child: Container(
+            width: 300,
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.deepPurple.withOpacity(0.3),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(5, 3),
                 ),
-              ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Enter the number of bank accounts:',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                TextField(
+                  controller: _numberOfAccountsController,
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    setState(() {
+                      _numberOfAccounts = int.tryParse(value) ?? 0;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Number of Accounts',
+                    labelStyle: TextStyle(
+                      color: _isTextFieldFocused ? Colors.black87 : Colors.grey,
+                    ),
+                    hintText: 'Enter number',
+                    hintStyle: TextStyle(
+                      color: _isTextFieldFocused ? Colors.black87 : Colors.grey,
+                    ),
+                    focusedBorder: customBorder(),
+                    enabledBorder: customBorder(),
+                  ),
+                  focusNode: _focusNode,
+                  onTap: () {
+                    setState(() {
+                      _isTextFieldFocused = true;
+                      _focusNode.requestFocus();
+                    });
+                  },
+                  onSubmitted: (_) {
+                    setState(() {
+                      _isTextFieldFocused = false;
+                      _focusNode.unfocus();
+                    });
+                  },
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: _navigateToAccountForms,
+                  child: Text('Next'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple, // Set the button color to purple
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-      )
-          : Container(
-        width: 10000,
-        height: 10000,
+      ),
+    );
+  }
+
+  OutlineInputBorder customBorder() {
+    return OutlineInputBorder(
+      borderSide: BorderSide(
+        color: _isTextFieldFocused ? Colors.black : Colors.grey,
+      ),
+      borderRadius: BorderRadius.circular(8.0),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+class AccountCreationPage extends StatefulWidget {
+  final int numberOfAccounts;
+
+  const AccountCreationPage({Key? key, required this.numberOfAccounts}) : super(key: key);
+
+  @override
+  _AccountCreationPageState createState() => _AccountCreationPageState();
+}
+
+class _AccountCreationPageState extends State<AccountCreationPage> {
+  List<AccountFormModel> _accountForms = [];
+  void _navigateToPreviewPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PreviewPage(accountForms: _accountForms),
+      ),
+    );
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    _createAccountForms();
+  }
+
+  void _createAccountForms() {
+    for (int i = 0; i < widget.numberOfAccounts; i++) {
+      _accountForms.add(AccountFormModel());
+    }
+  }
+
+  void _handleAccountFormUpdate(int index, AccountFormModel updatedForm) {
+    setState(() {
+      _accountForms[index] = updatedForm;
+    });
+  }
+
+  bool _validateAccountForm() {
+    for (AccountFormModel form in _accountForms) {
+      if (form.accountNumber.isEmpty ||
+          form.initialBalance <= 0 ||
+          form.bankAccount.isEmpty) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void _showValidationMessage(List<String> errorMessages) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(errorMessages.join('\n'))),
+    );
+  }
+
+  List<String> _getAccountFormErrors() {
+    List<String> errorMessages = [];
+
+    for (int i = 0; i < _accountForms.length; i++) {
+      AccountFormModel form = _accountForms[i];
+
+      if (form.accountNumber.isEmpty) {
+        errorMessages.add('Account ${i + 1}: Account number is required.');
+      }
+
+      if (form.initialBalance <= 0) {
+        errorMessages.add('Account ${i + 1}: Initial balance must be greater than 0.');
+      }
+
+      if (form.bankAccount.isEmpty) {
+        errorMessages.add('Account ${i + 1}: Bank account is required.');
+      }
+    }
+
+    return errorMessages;
+  }
+  void _validateAndNavigate() {
+    List<String> errorMessages = _validateAccountForm() as List<String>;
+
+    if (errorMessages.isEmpty) {
+      _navigateToPreviewPage();
+    } else {
+      _showValidationMessage(errorMessages);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+
+      body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/back8.jpg'),
             fit: BoxFit.cover,
           ),
         ),
-        child: Container(child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-
-          children :[
-            Text(
-              'Bank Account',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
+        child: ListView.builder(
+          itemCount: _accountForms.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 10.0),
+              child: AccountForm(
+                formIndex: index,
+                accountFormModel: _accountForms[index],
+                onUpdate: _handleAccountFormUpdate,
               ),
-            ),
-            Text(
-              'Welcome to your finance area',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.grey,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(width: 16.0),
-                Card(
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          List<String> errorMessages = _getAccountFormErrors();
 
-                  color: Colors.purple,
-                  elevation: 0.0, // Remove default card elevation
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Container(
+          if (errorMessages.isEmpty) {
+            _navigateToPreviewPage();
+          } else {
+            _showValidationMessage(errorMessages);
+          }
+        },
+        backgroundColor: Colors.deepPurple.shade400,
+        child: Icon(Icons.check),
+      ),
 
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.purple.withOpacity(0.4), // Set shadow color with opacity
-                          offset: Offset(10, 10), // Adjust the offset of the shadow
-                          blurRadius: 4, // Set the blur radius of the shadow
-                          spreadRadius: -2, // Adjust the spread radius of the shadow
-                        ),
-                      ],
-                    ),
-                    width: 500, // Set the desired width
-                    height: 300, // Set the desired height
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(5.0,4,0,0),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Account Number:  $_accountNumber',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                          SizedBox(height: 16.0),
-                          Text(
-                            'Total Net Worth:  \$$_initialBalance',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                          SizedBox(width: 20.00,),
-                          Row(
-                            children: [
-                              Icon(Icons.calendar_today),
-                              SizedBox(width: 16.0),
-                              Text(
-                                'By Week',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                              SizedBox(width: 16.0),
-                              DropdownButton<String>(
-                                value: _selectedWeek,
-                                items: List.generate(52, (index) => 'Week ${index + 1}').map((week) {
-                                  return DropdownMenuItem<String>(
-                                    value: week,
-                                    child: Text(week),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedWeek = value!;
-                                  });
-                                },
-                              ),
-                              SizedBox(width: 20,),
-    Icon(Icons.date_range),
-    SizedBox(width: 16.0),
-    Text(
-    'By Month',
-    style: TextStyle(
-    color: Colors.white,
-    fontSize: 18.0,
-    ),
-    ),
-    Icon(Icons.calendar_today),
-    SizedBox(width: 16.0),
-    Text(
-    'By Year',
-    style: TextStyle(
-    color: Colors.white,
-    fontSize: 18.0,
-    ),
-    ),
-    SizedBox(width: 16.0),
-    DropdownButton<int>(
-    value: _selectedYear,
-    items: _years.map((year) {
-    return DropdownMenuItem<int>(
-    value: year,
-    child: Text(year.toString()),
-    );
-    }).toList(),
-    onChanged: (value) {
-    setState(() {
-    _selectedYear = value!;
-    });
-    },
-    ),
-    ],
-    ),
-    SizedBox(height: 16.0),
-    Expanded(
-    child: charts.BarChart(
-    _chartData,
-    animate: true,
-    domainAxis: charts.OrdinalAxisSpec(
-    renderSpec: charts.SmallTickRendererSpec(
-    labelRotation: 45,
-    ),
-    ),
-    primaryMeasureAxis: charts.NumericAxisSpec(
-    tickProviderSpec: charts.BasicNumericTickProviderSpec(
-    desiredTickCount: 6,
-    ),
-    ),
-    ),
-    ),
-    ],
-    ),
-    ),
-    ),
-    ),
-    ],
-    ),
-    ],
-    ),
-    ),
-    ),
     );
   }
 }
 
-class Statistic {
-  final String dayOfWeek;
-  final int netWorth;
+class AccountForm extends StatefulWidget {
+  final int formIndex;
+  final AccountFormModel accountFormModel;
+  final Function(int, AccountFormModel) onUpdate;
 
-  Statistic(this.dayOfWeek, this.netWorth);
+  const AccountForm({
+    Key? key,
+    required this.formIndex,
+    required this.accountFormModel,
+    required this.onUpdate,
+  }) : super(key: key);
+
+  @override
+  _AccountFormState createState() => _AccountFormState();
+}
+
+class _AccountFormState extends State<AccountForm> {
+  TextEditingController _accountNumberController = TextEditingController();
+  TextEditingController _initialBalanceController = TextEditingController();
+  TextEditingController _bankAccountController = TextEditingController();
+
+  bool _isAccountNumberValid = true;
+  bool _isInitialBalanceValid = true;
+  bool _isBankAccountValid = true;
+
+  @override
+  void dispose() {
+    _accountNumberController.dispose();
+    _initialBalanceController.dispose();
+    _bankAccountController.dispose();
+    super.dispose();
+  }
+
+  void _handleLogoSelection() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter Bank Logo URL'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                widget.accountFormModel.bankLogoUrl = value;
+              });
+            },
+            decoration: InputDecoration(
+              hintText: 'Bank Logo URL',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  widget.accountFormModel.bankLogoFile = null;
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('Remove Logo'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _updateFormModel() {
+    AccountFormModel updatedForm = AccountFormModel();
+    updatedForm.accountNumber = _accountNumberController.text;
+    updatedForm.initialBalance = double.tryParse(_initialBalanceController.text) ?? 0.0;
+    updatedForm.bankAccount = _bankAccountController.text;
+    updatedForm.bankLogoUrl = widget.accountFormModel.bankLogoUrl;
+    updatedForm.bankLogoFile = widget.accountFormModel.bankLogoFile;
+
+    bool isAccountNumberValid = updatedForm.accountNumber.isNotEmpty;
+    bool isInitialBalanceValid = updatedForm.initialBalance > 0;
+    bool isBankAccountValid = updatedForm.bankAccount.isNotEmpty;
+
+    setState(() {
+      _isAccountNumberValid = isAccountNumberValid;
+      _isInitialBalanceValid = isInitialBalanceValid;
+      _isBankAccountValid = isBankAccountValid;
+
+      if (isAccountNumberValid && isInitialBalanceValid && isBankAccountValid) {
+        widget.onUpdate(widget.formIndex, updatedForm);
+      }
+    });
+
+    if (!isAccountNumberValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid account number in Account ${widget.formIndex + 1}')),
+      );
+    } else if (!isInitialBalanceValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid initial balance in Account ${widget.formIndex + 1}')),
+      );
+    } else if (!isBankAccountValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid bank account in Account ${widget.formIndex + 1}')),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _accountNumberController.text = widget.accountFormModel.accountNumber;
+    _initialBalanceController.text =
+        widget.accountFormModel.initialBalance.toString();
+    _bankAccountController.text = widget.accountFormModel.bankAccount;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return  Column(
+    children: [
+    AppBar(
+    automaticallyImplyLeading: false,
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    title: IconButton(
+    icon: Icon(Icons.arrow_back),
+    onPressed: () {
+    Navigator.pop(context);
+    },
+    ),
+    ),
+      Center(
+        child: Container(
+        width: 300,
+        padding: EdgeInsets.all(16.0),
+    decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(8.0),
+    boxShadow: [
+    BoxShadow(
+    color: Colors.deepPurple.withOpacity(0.3),
+    spreadRadius: 2,
+    blurRadius: 5,
+    offset: Offset(10, 3),
+    ),
+    ],
+    ),
+    child: Padding(
+    padding: EdgeInsets.all(16.0),
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    Text(
+    'Account ${widget.formIndex + 1}',
+    style: TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.bold,
+    ),
+    ),
+    SizedBox(height: 16.0),
+    TextField(
+    controller: _accountNumberController,
+    onChanged: (_) => _updateFormModel(),
+    decoration: InputDecoration(
+    labelText: 'Account Number',
+    border: OutlineInputBorder(),
+    errorText: _isAccountNumberValid ? null : 'Invalid account number',
+    ),
+    ),
+    SizedBox(height: 16.0),
+    TextField(
+    controller: _initialBalanceController,
+    onChanged: (_) => _updateFormModel(),
+    keyboardType: TextInputType.numberWithOptions(decimal: true),
+    decoration: InputDecoration(
+    labelText: 'Initial Balance',
+    border: OutlineInputBorder(),
+    errorText: _isInitialBalanceValid ? null : 'Invalid initial balance',
+    ),
+    ),
+    SizedBox(height: 16.0),
+    TextField(
+    controller: _bankAccountController,
+    onChanged:
+        (_) => _updateFormModel(),
+      decoration: InputDecoration(
+        labelText: 'Bank Account',
+        border: OutlineInputBorder(),
+        errorText: _isBankAccountValid ? null : 'Invalid bank account',
+      ),
+    ),
+      SizedBox(height: 16.0),
+      Row(
+        children: [
+          ElevatedButton(
+            onPressed: _handleLogoSelection,
+            child: Text('Select Logo'),
+          ),
+          SizedBox(width: 16.0),
+          if (widget.accountFormModel.bankLogoFile != null)
+            Text('Logo Selected: ${widget.accountFormModel.bankLogoFile!.path}'),
+          if (widget.accountFormModel.bankLogoFile == null && widget.accountFormModel.bankLogoUrl.isNotEmpty)
+            Text('Logo URL: ${widget.accountFormModel.bankLogoUrl}'),
+        ],
+      ),
+    ],
+    ),
+    ),
+        ),
+    ),
+    ],
+    );
+
+  }
+}
+
+class AccountFormModel {
+  String accountNumber = '';
+  double initialBalance = 0.0;
+  String bankAccount = '';
+  String bankLogoUrl = ''; // New property for bank logo URL
+  File? bankLogoFile;
+
+}
+class AccountFormMode2{
+  String accountNumber = '';
+  double initialBalance = 0.0;
+  String bankAccount = '';
+  String bankLogoUrl = ''; // New property for bank logo URL
+  File? bankLogoFile;
+
+
+  AccountFormMode2({
+    required this.accountNumber,
+    required this.initialBalance,
+    required this.bankAccount,
+    required this.bankLogoUrl,
+    this.bankLogoFile,
+  });
+}
+
+
+class PreviewPage extends StatefulWidget {
+  final List<AccountFormModel> accountForms;
+
+  const PreviewPage({Key? key, required this.accountForms}) : super(key: key);
+
+  @override
+  _PreviewPageState createState() => _PreviewPageState();
+}
+
+class _PreviewPageState extends State<PreviewPage> {
+  List<String> customBankAccounts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the customBankAccounts list with empty strings
+    customBankAccounts = List.generate(widget.accountForms.length, (_) => '');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Preview Page'),
+      ),
+      body: ListView.builder(
+        itemCount: widget.accountForms.length,
+        itemBuilder: (context, index) {
+          return Card(
+            color: Colors.pink,
+            child: ListTile(
+              title: Text('${widget.accountForms[index].bankAccount} Account'),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Account Number: ${widget.accountForms[index].accountNumber}'),
+                  Text('Initial Balance: \$${widget.accountForms[index].initialBalance.toStringAsFixed(2)}'),
+                ],
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () {
+                  _showCustomBankAccountDialog(index);
+                },
+              ),
+            ),
+          );
+
+        },
+      ),
+    );
+  }
+
+  void _showCustomBankAccountDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Custom Bank Account'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                customBankAccounts[index] = value;
+              });
+            },
+            decoration: InputDecoration(
+              hintText: 'Enter custom bank account',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
