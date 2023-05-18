@@ -326,7 +326,7 @@ class _Items extends State<Items> {
           Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
-                image: AssetImage("assets/back8.jpg"),
+                image: AssetImage("assets/rm222-mind-22.jpg"),
                 fit: BoxFit.cover,
               ),
             ),

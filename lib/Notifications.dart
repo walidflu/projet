@@ -108,7 +108,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/back8.jpg"),
+                image: AssetImage("assets/rm222-mind-22.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
