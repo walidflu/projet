@@ -156,7 +156,7 @@ class _Items extends State<Items> {
                 }
                 Navigator.pop(context);
               },
-              child: Text('Remove'),
+              child: Text('Remove',style: TextStyle(color:Colors.deepPurple),),
             ),
           ],
         );
@@ -268,7 +268,7 @@ class _Items extends State<Items> {
                 addItem(title, quantity, price);
                 Navigator.pop(context);
               },
-              child: Text('Add'),
+              child: Text('Add',style: TextStyle(color: Colors.deepPurple),),
             ),
           ],
         );

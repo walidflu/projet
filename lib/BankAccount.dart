@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-
 class BankAccountForm extends StatefulWidget {
   @override
   _BankAccountFormState createState() => _BankAccountFormState();
@@ -121,7 +120,8 @@ class _BankAccountFormState extends State<BankAccountForm> {
                   onPressed: _navigateToAccountForms,
                   child: Text('Next'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple, // Set the button color to purple
+                    backgroundColor:
+                        Colors.purple, // Set the button color to purple
                   ),
                 ),
               ],
@@ -142,17 +142,11 @@ class _BankAccountFormState extends State<BankAccountForm> {
   }
 }
 
-
-
-
-
-
-
-
 class AccountCreationPage extends StatefulWidget {
   final int numberOfAccounts;
 
-  const AccountCreationPage({Key? key, required this.numberOfAccounts}) : super(key: key);
+  const AccountCreationPage({Key? key, required this.numberOfAccounts})
+      : super(key: key);
 
   @override
   _AccountCreationPageState createState() => _AccountCreationPageState();
@@ -168,7 +162,6 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
       ),
     );
   }
-
 
   @override
   void initState() {
@@ -216,7 +209,8 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
       }
 
       if (form.initialBalance <= 0) {
-        errorMessages.add('Account ${i + 1}: Initial balance must be greater than 0.');
+        errorMessages
+            .add('Account ${i + 1}: Initial balance must be greater than 0.');
       }
 
       if (form.bankAccount.isEmpty) {
@@ -226,6 +220,7 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
 
     return errorMessages;
   }
+
   void _validateAndNavigate() {
     List<String> errorMessages = _validateAccountForm() as List<String>;
 
@@ -239,7 +234,6 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -271,10 +265,9 @@ class _AccountCreationPageState extends State<AccountCreationPage> {
             _showValidationMessage(errorMessages);
           }
         },
-        backgroundColor:Colors.white,
-        child: Icon(Icons.check,color: Colors.purpleAccent),
+        backgroundColor: Colors.white,
+        child: Icon(Icons.check, color: Colors.purpleAccent),
       ),
-
     );
   }
 }
@@ -338,7 +331,8 @@ class _AccountFormState extends State<AccountForm> {
             ),
             TextButton(
               onPressed: () async {
-                bool isValid = await _validateLogoUrl(widget.accountFormModel.bankLogoUrl);
+                bool isValid =
+                    await _validateLogoUrl(widget.accountFormModel.bankLogoUrl);
                 if (isValid) {
                   setState(() {
                     widget.accountFormModel.bankLogoFile = null;
@@ -366,7 +360,8 @@ class _AccountFormState extends State<AccountForm> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('Invalid URL'),
-              content: Text('The provided URL does not point to a valid photo.'),
+              content:
+                  Text('The provided URL does not point to a valid photo.'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -406,7 +401,8 @@ class _AccountFormState extends State<AccountForm> {
   void _updateFormModel() {
     AccountFormModel updatedForm = AccountFormModel();
     updatedForm.accountNumber = _accountNumberController.text;
-    updatedForm.initialBalance = double.tryParse(_initialBalanceController.text) ?? 0.0;
+    updatedForm.initialBalance =
+        double.tryParse(_initialBalanceController.text) ?? 0.0;
     updatedForm.bankAccount = _bankAccountController.text;
     updatedForm.bankLogoUrl = widget.accountFormModel.bankLogoUrl;
     updatedForm.bankLogoFile = widget.accountFormModel.bankLogoFile;
@@ -427,15 +423,21 @@ class _AccountFormState extends State<AccountForm> {
 
     if (!isAccountNumberValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid account number in Account ${widget.formIndex + 1}')),
+        SnackBar(
+            content: Text(
+                'Invalid account number in Account ${widget.formIndex + 1}')),
       );
     } else if (!isInitialBalanceValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid initial balance in Account ${widget.formIndex + 1}')),
+        SnackBar(
+            content: Text(
+                'Invalid initial balance in Account ${widget.formIndex + 1}')),
       );
     } else if (!isBankAccountValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid bank account in Account ${widget.formIndex + 1}')),
+        SnackBar(
+            content: Text(
+                'Invalid bank account in Account ${widget.formIndex + 1}')),
       );
     }
   }
@@ -451,7 +453,7 @@ class _AccountFormState extends State<AccountForm> {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
+    return Column(
       children: [
         AppBar(
           automaticallyImplyLeading: false,
@@ -499,29 +501,35 @@ class _AccountFormState extends State<AccountForm> {
                     decoration: InputDecoration(
                       labelText: 'Account Number',
                       border: OutlineInputBorder(),
-                      errorText: _isAccountNumberValid ? null : 'Invalid account number',
+                      errorText: _isAccountNumberValid
+                          ? null
+                          : 'Invalid account number',
                     ),
                   ),
                   SizedBox(height: 16.0),
                   TextField(
                     controller: _initialBalanceController,
                     onChanged: (_) => _updateFormModel(),
-                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
                       labelText: 'Initial Balance',
                       border: OutlineInputBorder(),
-                      errorText: _isInitialBalanceValid ? null : 'Invalid initial balance',
+                      errorText: _isInitialBalanceValid
+                          ? null
+                          : 'Invalid initial balance',
                     ),
                   ),
                   SizedBox(height: 16.0),
                   TextField(
                     controller: _bankAccountController,
-                    onChanged:
-                        (_) => _updateFormModel(),
+                    onChanged: (_) => _updateFormModel(),
                     decoration: InputDecoration(
                       labelText: 'Bank Account Name',
                       border: OutlineInputBorder(),
-                      errorText: _isBankAccountValid ? null : 'Invalid bank account name ',
+                      errorText: _isBankAccountValid
+                          ? null
+                          : 'Invalid bank account name ',
                     ),
                   ),
                   SizedBox(height: 16.0),
@@ -532,7 +540,6 @@ class _AccountFormState extends State<AccountForm> {
                         child: Text('Select Logo'),
                       ),
                       SizedBox(width: 16.0),
-
                     ],
                   ),
                 ],
@@ -542,7 +549,6 @@ class _AccountFormState extends State<AccountForm> {
         ),
       ],
     );
-
   }
 }
 
@@ -552,24 +558,8 @@ class AccountFormModel {
   String bankAccount = '';
   String bankLogoUrl = ''; // New property for bank logo URL
   File? bankLogoFile;
-
 }
-class AccountFormMode2{
-  String accountNumber = '';
-  double initialBalance = 0.0;
-  String bankAccount = '';
-  String bankLogoUrl = ''; // New property for bank logo URL
-  File? bankLogoFile;
 
-
-  AccountFormMode2({
-    required this.accountNumber,
-    required this.initialBalance,
-    required this.bankAccount,
-    required this.bankLogoUrl,
-    this.bankLogoFile,
-  });
-}
 class TransactionModel {
   final String date;
   final String bankName;
@@ -592,10 +582,8 @@ class TransactionModel {
   });
 }
 
-
 class PreviewPage extends StatefulWidget {
   final List<AccountFormModel> accountForms;
-
 
   const PreviewPage({Key? key, required this.accountForms}) : super(key: key);
 
@@ -608,264 +596,381 @@ class _PreviewPageState extends State<PreviewPage> {
   List<TransactionModel> transactions = [];
   int transactionCount = 0;
   String? selectedSortOption = 'date'; // Assign a default value
-
+  String? selectedTypeOption; // Store the selected type filter option
+  String? selectedCategoryOption; // Store the selected category filter option
+  String? selectedFilterOption; // Store the selected filter option
 
   @override
   void initState() {
     super.initState();
     customBankAccounts = List.generate(widget.accountForms.length, (_) => '');
   }
-  void sortTransactions(String sortBy) {
-    setState(() {
-      if (sortBy == 'date') {
-        transactions.sort((a, b) => a.date.compareTo(b.date));
-      } else if (sortBy == 'credit') {
-        transactions.sort((a, b) => a.credit.compareTo(b.credit));
+
+  List<TransactionModel> getFilteredTransactions() {
+    return transactions.where((transaction) {
+      // Apply the selected type and category filters
+      bool isTypeMatched =
+          selectedTypeOption == null || transaction.type == selectedTypeOption;
+      bool isCategoryMatched = selectedCategoryOption == null ||
+          transaction.category == selectedCategoryOption;
+
+      return isTypeMatched && isCategoryMatched;
+    }).toList();
+  }
+
+  List<TransactionModel> getFilteredTransactionsWithFilter() {
+    return transactions.where((transaction) {
+      // Apply the selected filter
+      if (selectedFilterOption == 'pay') {
+        return transaction.type == 'Pay';
+      } else if (selectedFilterOption == 'receive') {
+        return transaction.type == 'Receive';
+      } else if (selectedFilterOption == 'cash') {
+        return transaction.category == 'Cash';
+      } else if (selectedFilterOption == 'cheque') {
+        return transaction.category == 'Cheque';
+      } else {
+        return true; // Return all transactions for other filters
       }
+    }).toList();
+  }
+
+  void sortTransactions(String sortOption) {
+    setState(() {
+      selectedSortOption = sortOption;
+      transactions.sort((a, b) {
+        switch (selectedSortOption) {
+          case 'date':
+            return a.date.compareTo(b.date);
+          case 'credit':
+            return a.credit.compareTo(b.credit);
+          default:
+            return 0;
+        }
+      });
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    double totalNetWorth = widget.accountForms.fold(
-        0, (sum, account) => sum + account.initialBalance);
-    if (selectedSortOption == 'date') {
-      transactions.sort((a, b) => a.date.compareTo(b.date));
-    } else if (selectedSortOption == 'credit') {
-      transactions.sort((a, b) => a.credit.compareTo(b.credit));
-    }
+    double totalNetWorth = widget.accountForms
+        .fold(0, (sum, account) => sum + account.initialBalance);
+
     return Scaffold(
-      body:Stack(
-          children: [
-      Container(
-      decoration: BoxDecoration(
-      image: DecorationImage(
-          image: AssetImage("assets/rm222-mind-22.jpg"),
-      fit: BoxFit.cover,
-    ),
-    ),
-    ),
-    Padding(
-    padding: EdgeInsets.all(10.0),
-    child: SingleChildScrollView(
-    child: Column(
-    children: [
-
-            Row(
-              children: [
-                for (int index = 0; index < widget.accountForms.length; index++)
-                  Expanded(
-                    child: Card(
-
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Ink.image(
-                        image: NetworkImage(
-                            'https://i.pinimg.com/236x/9f/d4/0e/9fd40eb024ae9ba994fe0eed91db1bdf.jpg'),
-                        fit: BoxFit.cover,
-                        child: SizedBox(
-                          height: 200,
-                          child: Stack(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Expanded(
-                                    child: ListTile(
-                                      title: Text(
-                                        '${widget.accountForms[index]
-                                            .bankAccount} Account',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      subtitle: Column(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Account Number: ${widget
-                                                    .accountForms[index]
-                                                    .accountNumber}',
-                                                style: TextStyle(fontSize: 14),
-                                              ),
-                                              Text(
-                                                'Initial Balance: \$${widget
-                                                    .accountForms[index]
-                                                    .initialBalance
-                                                    .toStringAsFixed(2)}',
-                                                style: TextStyle(fontSize: 14),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      onTap: () {
-                                        _showCustomBankAccountDialog(index);
-                                      },
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: CircleAvatar(
-                                        radius: 40,
-                                        backgroundImage: widget
-                                            .accountForms[index].bankLogoUrl
-                                            .isNotEmpty
-                                            ? NetworkImage(
-                                            widget.accountForms[index]
-                                                .bankLogoUrl)
-                                            : null,
-                                        child: widget.accountForms[index]
-                                            .bankLogoUrl.isEmpty
-                                            ? Icon(Icons
-                                            .image) // Placeholder icon if no logo is available
-                                            : null,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Positioned(
-                                right: 8.0,
-                                bottom: 8.0,
-                                child: IconButton(
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {
-                                    _showCustomBankAccountDialog(index);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            Container(
-              height: 400,
-              padding: EdgeInsets.all(8.0),
-              margin: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                color: Colors.red[200],
-                borderRadius: BorderRadius.circular(8.0),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/rm222-mind-22.jpg"),
+                fit: BoxFit.cover,
               ),
-
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Total Net Worth: ',
-                      style: TextStyle(
-
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                      ),
+                  Row(
+                    children: [
+                      for (int index = 0;
+                          index < widget.accountForms.length;
+                          index++)
+                        Expanded(
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Ink.image(
+                              image: NetworkImage(
+                                  'https://i.pinimg.com/236x/9f/d4/0e/9fd40eb024ae9ba994fe0eed91db1bdf.jpg'),
+                              fit: BoxFit.cover,
+                              child: SizedBox(
+                                height: 200,
+                                child: Stack(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Expanded(
+                                          child: ListTile(
+                                            title: Text(
+                                              '${widget.accountForms[index].bankAccount} Account',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      'Account Number: ${widget.accountForms[index].accountNumber}',
+                                                      style: TextStyle(
+                                                          fontSize: 14),
+                                                    ),
+                                                    Text(
+                                                      'Initial Balance: \$${widget.accountForms[index].initialBalance.toStringAsFixed(2)}',
+                                                      style: TextStyle(
+                                                          fontSize: 14),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            onTap: () {
+                                              _showCustomBankAccountDialog(
+                                                  index);
+                                            },
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Container(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: CircleAvatar(
+                                              radius: 40,
+                                              backgroundImage: widget
+                                                      .accountForms[index]
+                                                      .bankLogoUrl
+                                                      .isNotEmpty
+                                                  ? NetworkImage(widget
+                                                      .accountForms[index]
+                                                      .bankLogoUrl)
+                                                  : null,
+                                              child: widget.accountForms[index]
+                                                      .bankLogoUrl.isEmpty
+                                                  ? Icon(Icons
+                                                      .image) // Placeholder icon if no logo is available
+                                                  : null,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Positioned(
+                                      right: 8.0,
+                                      bottom: 8.0,
+                                      child: IconButton(
+                                        icon: Icon(Icons.edit),
+                                        onPressed: () {
+                                          _showCustomBankAccountDialog(index);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  Container(
+                    height: 400,
+                    padding: EdgeInsets.all(8.0),
+                    margin: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white60,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Total Net Worth: ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30,
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            '\$${totalNetWorth.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.center,
                     child: Text(
-                      '\$${totalNetWorth.toStringAsFixed(2)}',
+                      "TRANSICTIONS TABLE",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: Colors.green,
+                        fontSize: 20,
+                        color: Colors.deepPurpleAccent,
                       ),
                     ),
+                  ),
+                  SizedBox(height: 16.0),
+Row(
+                  children :[
+    DropdownButton<String>(
+    value: selectedSortOption,
+    onChanged: (String? newValue) {
+    sortTransactions(newValue!);
+    },
+    items: <String>[
+    'date',
+    'credit',
+    ].map<DropdownMenuItem<String>>((String value) {
+    return DropdownMenuItem<String>(
+    value: value,
+    child: Text(value),
+    );
+    }).toList(),
+    ),
+                        Text(
+                          'Filter:',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(width: 16.0),
+    DropdownButton<String>(
+    value: selectedCategoryOption,
+    onChanged: (value) {
+    setState(() {
+    selectedCategoryOption = value!;
+    });
+    },
+    items: [
+    DropdownMenuItem(
+    value: 'All',
+    child: Text('All'),
+    ),
+    DropdownMenuItem(
+    value: 'Cheque',
+    child: Text('Cheque'),
+    ),
+    DropdownMenuItem(
+    value: 'Cash',
+    child: Text('Cash'),
+    ),
+    ],
+    ),
+   ],
+),
+
+                  SizedBox(height: 16.0),
+
+                  SizedBox(height: 20.0),
+                  Text(
+                    'Transactions (${getFilteredTransactions().length})',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  Container(
+                    margin: EdgeInsets.all(8.0),
+                    width: double.infinity,
+                    child: DataTable(
+                      headingRowColor: MaterialStateProperty.resolveWith(
+                            (states) => Colors.deepPurpleAccent.shade100,
+                      ),
+                      columns: [
+                        DataColumn(
+                          label: Text(
+                            'Date',
+                            style: TextStyle(color: Colors.white60),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Bank Name',
+                            style: TextStyle(color: Colors.white60),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Type',
+                            style: TextStyle(color: Colors.white60),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Category',
+                            style: TextStyle(color: Colors.white60),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Credit',
+                            style: TextStyle(color: Colors.white60),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Account Number',
+                            style: TextStyle(color: Colors.white60),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Name of the Other',
+                            style: TextStyle(color: Colors.white60),
+                          ),
+                        ),
+                      ],
+                      rows: getFilteredTransactions().map((transaction) {
+                        return DataRow(cells: [
+                          DataCell(Text(transaction.date)),
+                          DataCell(Text(transaction.bankName)),
+                          DataCell(Text(transaction.type)),
+                          DataCell(Text(transaction.category)),
+                          DataCell(Text(transaction.credit)),
+                          DataCell(Text(transaction.accountNumber)),
+                          DataCell(Text(transaction.nameOfOther)),
+                        ]);
+                      }).toList(),
+                    ),
+                  ),
+
+
+
+
+
+
+
+SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      _showTransactionDialog();
+                    },
+                    child: Text('Add Transaction'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purpleAccent.shade100,
+                        fixedSize:
+                            Size(150, 30) // Replace with your desired color
+                        ),
                   ),
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.center,
-            child : Text(
-              "TRANSICTIONS TABLE",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.deepPurpleAccent,
-              ),
-            ),
-            ),
-      DropdownButtonFormField<String>(
-        value: selectedSortOption,
-        onChanged: (newValue) {
-          setState(() {
-            selectedSortOption = newValue ?? '';
-          });
-        },
-        items: [
-          DropdownMenuItem<String>(
-            value: 'date',
-            child: Text('Date'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'credit',
-            child: Text('Credit'),
           ),
         ],
-        decoration: InputDecoration(labelText: 'Sort By'),
-      ),
-            Container(
-              margin: EdgeInsets.all(8.0),
-              width: double.infinity,
-              child: DataTable(headingRowColor: MaterialStateProperty.resolveWith(
-    (states) => Colors.deepPurpleAccent.shade100,),
-                columns: [
-                  DataColumn(label: Text('Date',style: TextStyle(color: Colors.white60),)),
-                  DataColumn(label: Text('Bank Name',style: TextStyle(color: Colors.white60),)),
-                  DataColumn(label: Text('Type',style: TextStyle(color: Colors.white60),)),
-                  DataColumn(label: Text('Category',style: TextStyle(color: Colors.white60),)),
-                  DataColumn(label: Text('Credit',style: TextStyle(color: Colors.white60),)),
-                  DataColumn(label: Text('Account Number',style: TextStyle(color: Colors.white60),)),
-                  DataColumn(label: Text('Name of the Other',style: TextStyle(color: Colors.white60),)),
-                ],
-                rows: transactions.map((transaction) {
-                  return DataRow(cells: [
-                    DataCell(Text(transaction.date)),
-                    DataCell(Text(transaction.bankName)),
-                    DataCell(Text(transaction.type)),
-                    DataCell(Text(transaction.category)),
-                    DataCell(Text(transaction.credit)),
-                    DataCell(Text(transaction.accountNumber)),
-                    DataCell(Text(transaction.nameOfOther)),
-                  ]);
-                }).toList(),
-              ),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                _showTransactionDialog();
-              },
-              child: Text('Add Transaction'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purpleAccent.shade100,
-                fixedSize: Size(150,30)// Replace with your desired color
-              ),
-            ),
-
-          ],
-        ),
-      ),
-        ),
-    ],
       ),
     );
   }
-
 
   void _showCustomBankAccountDialog(int index) async {
     TextEditingController accountNameController = TextEditingController();
@@ -912,13 +1017,16 @@ class _PreviewPageState extends State<PreviewPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel',style: TextStyle(color: Colors.deepPurpleAccent),),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.deepPurpleAccent),
+              ),
             ),
             TextButton(
               onPressed: () async {
                 // Validate bank logo URL existence
-                bool isLogoUrlValid = await _checkImageUrlExists(
-                    bankLogoController.text);
+                bool isLogoUrlValid =
+                    await _checkImageUrlExists(bankLogoController.text);
 
                 if (isLogoUrlValid) {
                   setState(() {
@@ -946,7 +1054,10 @@ class _PreviewPageState extends State<PreviewPage> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('OK',style: TextStyle(color: Colors.deepPurpleAccent),),
+                            child: Text(
+                              'OK',
+                              style: TextStyle(color: Colors.deepPurpleAccent),
+                            ),
                           ),
                         ],
                       );
@@ -954,7 +1065,10 @@ class _PreviewPageState extends State<PreviewPage> {
                   );
                 }
               },
-              child: Text('Save',style: TextStyle(color: Colors.deepPurpleAccent),),
+              child: Text(
+                'Save',
+                style: TextStyle(color: Colors.deepPurpleAccent),
+              ),
             ),
           ],
         );
@@ -982,10 +1096,10 @@ class _PreviewPageState extends State<PreviewPage> {
     DateTime currentDate = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
     String? selectedTransactionType = 'pay'; // Assign a default value
-    String? selectedTransactioncategory='cheque';
+    String? selectedTransactioncategory = 'cheque';
 
-showDialog(
-    context: context,
+    showDialog(
+      context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Add Transaction'),
@@ -1013,7 +1127,6 @@ showDialog(
                   }).toList(),
                   decoration: InputDecoration(labelText: 'Type'),
                 ),
-
                 DropdownButtonFormField<String>(
                   value: selectedTransactioncategory,
                   onChanged: (newValue) {
@@ -1049,7 +1162,10 @@ showDialog(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel',style: TextStyle(color: Colors.deepPurpleAccent),),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.deepPurpleAccent),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -1057,8 +1173,9 @@ showDialog(
                 String credit = creditController.text.trim();
 
                 // Validate bank name
-                List<String> existingBankNames = widget.accountForms.map((
-                    form) => form.bankAccount).toList();
+                List<String> existingBankNames = widget.accountForms
+                    .map((form) => form.bankAccount)
+                    .toList();
                 if (bankName.isEmpty || !existingBankNames.contains(bankName)) {
                   showDialog(
                     context: context,
@@ -1066,13 +1183,18 @@ showDialog(
                       return AlertDialog(
                         title: Text('Invalid Bank Name'),
                         content: Text(
-                            'Please enter a valid bank name from the existing bank accounts.',style: TextStyle(color: Colors.deepPurpleAccent),),
+                          'Please enter a valid bank name from the existing bank accounts.',
+                          style: TextStyle(color: Colors.deepPurpleAccent),
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('OK',style: TextStyle(color: Colors.deepPurpleAccent),),
+                            child: Text(
+                              'OK',
+                              style: TextStyle(color: Colors.deepPurpleAccent),
+                            ),
                           ),
                         ],
                       );
@@ -1089,13 +1211,18 @@ showDialog(
                       return AlertDialog(
                         title: Text('Invalid Credit'),
                         content: Text(
-                            'Please enter a single numeric character for the credit.',style: TextStyle(color: Colors.deepPurpleAccent),),
+                          'Please enter a single numeric character for the credit.',
+                          style: TextStyle(color: Colors.deepPurpleAccent),
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('OK',style: TextStyle(color: Colors.deepPurpleAccent),),
+                            child: Text(
+                              'OK',
+                              style: TextStyle(color: Colors.deepPurpleAccent),
+                            ),
                           ),
                         ],
                       );
@@ -1107,25 +1234,24 @@ showDialog(
                 // Get the selected transaction type (pay/receive)
                 String transactionType = selectedTransactionType ??
                     ''; // Assign an empty string if the value is null
-                String transactioncategory = selectedTransactioncategory ??
-                    '';
+                String transactioncategory = selectedTransactioncategory ?? '';
                 AccountFormModel bankAccount = widget.accountForms.firstWhere(
-                      (account) => account.bankAccount == bankName,
-                  orElse: () => AccountFormModel(), // Return a default object if not found
+                  (account) => account.bankAccount == bankName,
+                  orElse: () =>
+                      AccountFormModel(), // Return a default object if not found
                 );
 
                 if (bankAccount != null) {
                   // Update the initial balance based on the transaction type
                   if (transactionType == 'pay') {
-                    double newBalance = bankAccount.initialBalance -
-                        double.parse(credit);
+                    double newBalance =
+                        bankAccount.initialBalance - double.parse(credit);
                     bankAccount.initialBalance = newBalance;
                   } else if (transactionType == 'receive') {
-                    double newBalance = bankAccount.initialBalance +
-                        double.parse(credit);
+                    double newBalance =
+                        bankAccount.initialBalance + double.parse(credit);
                     bankAccount.initialBalance = newBalance;
                   }
-
                 }
 
                 setState(() {
@@ -1147,7 +1273,10 @@ showDialog(
 
                 Navigator.of(context).pop();
               },
-              child: Text('Save',style: TextStyle(color: Colors.deepPurpleAccent),),
+              child: Text(
+                'Save',
+                style: TextStyle(color: Colors.deepPurpleAccent),
+              ),
             ),
           ],
         );
