@@ -32,6 +32,8 @@ dependencies:
   table_calendar: ^2.3.3
   image_picker: ^0.8.4+4
 path_provider: ^2.0.5
+flutter_hover: ^0.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
